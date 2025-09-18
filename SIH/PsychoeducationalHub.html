@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psychoeducational Hub</title>
+
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons for professional icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            @apply text-gray-800;
+            /* Removed gradient background */
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #4A90E2 0%, #7B68EE 100%);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #4A90E2 0%, #7B68EE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(74, 144, 226, 0.8));
+        }
+        .card-shadow {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05), 0 6px 6px rgba(0,0,0,0.05);
+        }
+        .card-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1), 0 8px 8px rgba(0,0,0,0.1);
+        }
+        .card-done {
+            border-color: #4A90E2;
+            box-shadow: 0 0 15px rgba(74, 144, 226, 0.5), 0 0 20px rgba(74, 144, 226, 0.5);
+        }
+        .progress-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(135deg, #4A90E2, #7B68EE);
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.8), 0 0 20px rgba(74, 144, 226, 0.6);
+            transition: width 0.5s ease-in-out;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px rgba(74, 144, 226, 0.8), 0 0 20px rgba(74, 144, 226, 0.6);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(74, 144, 226, 1), 0 0 30px rgba(74, 144, 226, 0.8);
+            }
+        }
+        #progress-text {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .card-border-glow {
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px #4A90E2;
+            }
+            to {
+                box-shadow: 0 0 20px #4A90E2;
+            }
+        }
+        /* Progress Tracker Styling */
+        #progress-icons i {
+            transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        #progress-icons i:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 10px rgba(74, 144, 226, 0.8));
+        }
+
+        /* Glass Container Styling */
+        .glass-container {
+            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, rgba(128, 90, 213, 0.3), rgba(74, 144, 226, 0.3)); /* Lighter Purple and Blue Gradient */
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+
+
+<body class="bg-gray-50">
+
+    <!-- Header Section -->
+    <header class="py-12 text-center">
+        <h1 class="text-gradient text-5xl font-bold mb-4">Psychoeducational Hub</h1>
+        <p class="text-gradient text-xl">Your guide to mental well-being and personal growth.</p>
+    </header>
+
+    
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="glass-container p-6 sm:p-10 mx-auto max-w-7xl">
+            <!-- Articles Section -->
+            <section class="mb-10">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="bi bi-file-earmark-text text-gradient mr-2 text-2xl"></i>
+                    Articles
+                </h2>
+                <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Article cards will be injected here by JS -->
+                </div>
+            </section>
+
+            <!-- Videos Section -->
+            <section class="mb-10">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="bi bi-youtube text-gradient mr-2 text-2xl"></i>
+                    Videos
+                </h2>
+                <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Video cards will be injected here by JS -->
+                </div>
+            </section>
+
+            <!-- Audios Section -->
+            <section>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="bi bi-file-music-fill text-gradient mr-2 text-2xl"></i>
+                    Audios
+                </h2>
+                <div id="audios-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Audio cards will be injected here by JS -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resources = {
+                articles: [
+                    {
+                        title: "Managing Academic Stress",
+                        description: "Strategies for handling exams & workload.",
+                        link: "https://www.verywellmind.com/tips-for-managing-school-stress-3145179",
+                        image: "article1.jpg"
+                    },
+                    {
+                        title: "Mindfulness for Students",
+                        description: "Daily mindfulness practices for focus & calm.",
+                        link: "https://positivepsychology.com/mindfulness-for-students/",
+                        image: "article2.jpg"
+                    },
+                    {
+                        title: "The Science of Sleep",
+                        description: "Why good sleep improves mental health.",
+                        link: "https://www.sleepfoundation.org/mental-health",
+                        image: "article3.png"
+                    }
+                ],
+                videos: [
+                    {
+                        title: "10-Minute Guided Meditation for Stress",
+                        description: "Find your inner calm with this short meditation.",
+                        link: "https://www.youtube.com/watch?v=inpok4MKVLM",
+                        image: "video1.jpg"
+                    },
+                    {
+                        title: "Deep Breathing for Anxiety Relief",
+                        description: "Simple breathing exercises to reduce anxiety.",
+                        link: "https://www.youtube.com/watch?v=aNXKjGFUlMs",
+                        image: "video2.jpg"
+                    },
+                    {
+                        title: "Progressive Muscle Relaxation",
+                        description: "A technique to relieve muscle tension.",
+                        link: "https://www.youtube.com/watch?v=86HUcX8ZtAk",
+                        image: "video3.jpg"
+                    }
+                ],
+                audios: [
+                    {
+                        title: "Calming Ocean Sounds",
+                        description: "Improves relaxation & sleep with natural sounds.",
+                        link: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                        image: "audio1.jpg"
+                    },
+                    {
+                        title: "Guided Body Scan Meditation",
+                        description: "Relieve stress & tension with this audio guide.",
+                        link: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+                        image: "audio2.png"
+                    },
+                    {
+                        title: "Nature Sounds – Birds & Forest",
+                        description: "Boost focus & calmness with serene forest sounds.",
+                        link: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                        image: "audio3.jpg"
+                    }
+                ]
+            };
+
+            const completedStateKey = 'completed_resources';
+            let completedResources = JSON.parse(localStorage.getItem(completedStateKey)) || {};
+
+            const updateProgressBar = () => {
+                const totalResources = 9;
+                const completedCount = Object.keys(completedResources).length;
+                const percentage = totalResources > 0 ? (completedCount / totalResources) * 100 : 0;
+
+                const progressBar = document.getElementById('progress-bar');
+                const progressText = document.getElementById('progress-text');
+                const progressCount = document.getElementById('progress-count');
+
+                progressBar.style.width = `${percentage}%`;
+                progressText.textContent = `${Math.round(percentage)}%`;
+                progressCount.textContent = `You have completed ${completedCount} of ${totalResources} resources`;
+
+                // Update progress icons
+                const progressIcons = document.getElementById('progress-icons');
+                progressIcons.innerHTML = '';
+
+                for (let i = 0; i < totalResources; i++) {
+                    const icon = document.createElement('i');
+                    icon.className = `bi ${i < completedCount ? 'bi-check-circle-fill text-[#4A90E2]' : 'bi-circle-fill text-gray-300'} text-2xl`;
+                    progressIcons.appendChild(icon);
+                }
+            };
+
+            const createCard = (resource, id) => {
+                const isCompleted = !!completedResources[id];
+                const card = document.createElement('div');
+                card.id = id;
+                card.className = `p-4 sm:p-6 rounded-xl border-2 transition-all duration-300 card-shadow card-lift cursor-pointer card-border-glow ${isCompleted ? 'border-[#4A90E2] card-done' : 'border-white bg-white'}`;
+                
+                const cardHtml = `
+                    <div class="w-full h-40 bg-gray-200 rounded-lg overflow-hidden mb-4">
+                         <img src="${resource.image}" alt="${resource.title}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/E5E7EB/4B5563?text=Image+Not+Found';" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex-grow">
+                            <h3 class="text-xl font-bold text-gray-900">${resource.title}</h3>
+                            <p class="text-gray-600 text-sm mb-2">${resource.description}</p>
+                            <a href="${resource.link}" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-[#4A90E2] hover:underline">
+                                ${id.includes('article') ? 'Read' : id.includes('video') ? 'Watch' : 'Listen'} Now
+                            </a>
+                        </div>
+                        <div class="flex-shrink-0 ml-4">
+                            <input type="checkbox" id="checkbox-${id}" class="form-checkbox h-5 w-5 rounded-full text-blue-600 focus:ring-blue-500" ${isCompleted ? 'checked' : ''}>
+                        </div>
+                    </div>
+                `;
+
+                card.innerHTML = cardHtml;
+                
+                const checkbox = card.querySelector(`#checkbox-${id}`);
+                checkbox.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        completedResources[id] = true;
+                        card.classList.add('border-[#4A90E2]', 'card-done');
+                        card.classList.remove('border-white', 'bg-white');
+                    } else {
+                        delete completedResources[id];
+                        card.classList.add('border-white', 'bg-white');
+                        card.classList.remove('border-[#4A90E2]', 'card-done');
+                    }
+                    localStorage.setItem(completedStateKey, JSON.stringify(completedResources));
+                    updateProgressBar();
+                });
+                
+                // Clicking the card also checks the checkbox
+                card.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'A') {
+                        checkbox.checked = !checkbox.checked;
+                        checkbox.dispatchEvent(new Event('change'));
+                    }
+                });
+
+                return card;
+            };
+
+            const renderResources = () => {
+                const articlesGrid = document.getElementById('articles-grid');
+                const videosGrid = document.getElementById('videos-grid');
+                const audiosGrid = document.getElementById('audios-grid');
+
+                articlesGrid.innerHTML = '';
+                videosGrid.innerHTML = '';
+                audiosGrid.innerHTML = '';
+
+                resources.articles.forEach((res, index) => {
+                    articlesGrid.appendChild(createCard(res, `article-${index}`));
+                });
+
+                resources.videos.forEach((res, index) => {
+                    videosGrid.appendChild(createCard(res, `video-${index}`));
+                });
+
+                resources.audios.forEach((res, index) => {
+                    audiosGrid.appendChild(createCard(res, `audio-${index}`));
+                });
+
+                updateProgressBar();
+            };
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const completionStatus = Array(9).fill(false); // Initial completion status for 9 resources
+
+                const renderProgressTracker = (status) => {
+                    const progressIcons = document.getElementById('progress-icons');
+                    const progressCount = document.getElementById('progress-count');
+                    const completedCount = status.filter(Boolean).length;
+
+                    // Update progress count text
+                    progressCount.textContent = `You have completed ${completedCount} of 9 resources`;
+
+                    // Clear existing icons
+                    progressIcons.innerHTML = '';
+
+                    // Render icons
+                    status.forEach((completed, index) => {
+                        const iconType = index < 3 ? 'bi-book' : index < 6 ? 'bi-play-circle' : 'bi-headphones';
+                        const icon = document.createElement('i');
+                        icon.className = `text-3xl ${iconType} ${completed ? 'text-gradient filter drop-shadow-lg' : 'text-gray-400'}`;
+                        progressIcons.appendChild(icon);
+                    });
+                };
+
+                // Example: Update completion status when resources are marked as done
+                const updateCompletionStatus = (id, isCompleted) => {
+                    const resourceIndex = parseInt(id.split('-')[1], 10);
+                    completionStatus[resourceIndex] = isCompleted;
+                    renderProgressTracker(completionStatus);
+                };
+
+                // Initial render
+                renderProgressTracker(completionStatus);
+
+                // Hook into the existing checkbox logic to update progress tracker
+                document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+                    checkbox.addEventListener('change', (e) => {
+                        const id = e.target.id.replace('checkbox-', '');
+                        updateCompletionStatus(id, e.target.checked);
+                    });
+                });
+            });
+
+            renderResources();
+        });
+    </script>
+</body>
+</html>

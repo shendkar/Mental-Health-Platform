@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unity Mental Wellness</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN for health graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #667eea 50%, #f093fb 75%, #f5576c 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #4A90E2 0%, #7B68EE 100%);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #4A90E2 0%, #7B68EE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-shadow {
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.3), 0 6px 20px rgba(123, 104, 238, 0.2);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-lift:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(74, 144, 226, 0.4), 0 15px 25px rgba(123, 104, 238, 0.3);
+            animation: cardGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes cardGlow {
+            0% {
+                box-shadow: 0 20px 40px rgba(74, 144, 226, 0.4), 0 15px 25px rgba(123, 104, 238, 0.3), 0 0 20px rgba(74, 144, 226, 0.5);
+            }
+            100% {
+                box-shadow: 0 25px 50px rgba(74, 144, 226, 0.6), 0 20px 35px rgba(123, 104, 238, 0.5), 0 0 30px rgba(123, 104, 238, 0.7);
+            }
+        }
+
+        .navbar-glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.1);
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(74, 144, 226, 0.2), 0 8px 15px rgba(123, 104, 238, 0.15);
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 25px 50px rgba(74, 144, 226, 0.3);
+        }
+
+        .mood-option.selected {
+            ring: 4px;
+            ring-color: #4A90E2;
+        }
+        
+        .energy-option.selected {
+            border-color: #4A90E2;
+            background-color: rgba(74, 144, 226, 0.1);
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #4A90E2;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #4A90E2;
+            cursor: pointer;
+            border: none;
+        }
+
+        .floating-animation {
+            animation: floating 6s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* --- Chatbot Styles --- */
+        #chatbot-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            background-image: linear-gradient(to right, #0A0F0F, #1E2B2B);
+            animation: chatbotPulse 2s infinite;
+            z-index: 1000;
+        }
+
+        #chatbot-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            animation: none;
+        }
+
+        @keyframes chatbotPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        #chatbot-panel {
+            position: fixed;
+            top: 20px;
+            bottom: 20px;
+            right: -420px; 
+            width: 400px;
+            background-color: #1E2B2B;
+            box-shadow: -10px 0 20px rgba(0, 0, 0, 0.5);
+            transition: right 0.3s ease-out;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-radius: 1rem;
+        }
+
+        #chatbot-panel.open {
+            right: 20px;
+        }
+
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+            transition: opacity 0.3s ease-in-out;
+            opacity: 0;
+        }
+            
+        #overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            #chatbot-panel {
+                width: 100%;
+                height: 100%;
+                top: 0;
+                right: -100%;
+                bottom: 0;
+                border-radius: 0;
+            }
+            #chatbot-panel.open {
+                right: 0;
+            }
+        }
+
+        .message-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            max-width: 80%;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-bubble.user {
+            background-color: #3E5959;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .message-bubble.bot {
+            background-color: #2A3C3C;
+            color: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .bot-message-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            align-self: flex-start;
+            max-width: 85%;
+        }
+        .bot-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 9999px;
+            background-color: #3E5959;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            flex-shrink: 0;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #2A3C3C;
+            border-radius: 10px;
+            max-width: min-content;
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #AAAAAA;
+            border-radius: 50%;
+            animation: bounce 0.6s infinite alternate;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-4px); }
+        }
+
+        #intro-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+            padding: 1rem;
+            background-color: #1E2B2B;
+            color: #FFFFFF;
+        }
+        
+        #intro-screen h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        #hello-button {
+            background-color: #3E5959;
+            color: #FFFFFF;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        #hello-button:hover { background-color: #557777; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar-glass fixed top-0 left-0 right-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center text-white font-bold shadow-lg">U</div>
+                <span class="text-xl font-semibold text-gray-900">Unity Mental Wellness</span>
+            </a>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#" class="text-blue-600 font-bold transition-all hover:underline hover:decoration-4 hover:decoration-blue-400">Home</a>
+                <a href="counselor.html" class="text-blue-600 font-bold transition-all hover:underline hover:decoration-4 hover:decoration-blue-400">Anonymous Counselling</a>
+                <a href="PsychoeducationalHub.html" class="text-blue-600 font-bold transition-all hover:underline hover:decoration-4 hover:decoration-blue-400">Psychoeducational Hub</a>
+            </div>
+            <button id="profileBtn" class="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-lg hover:shadow-xl transition-all" title="Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 1118.364 4.56 9 9 0 015.12 17.804z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </button>
+        </nav>
+    </header>
+
+    <main class="pt-24 pb-16">
+        <section class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center mb-24">
+            <div class="relative floating-animation">
+                 <img src="img.png" alt="Mental Health Illustration" class="rounded-2xl shadow-2xl" />
+        </section>
+
+    <a href="counselor.html">
+        <section class="container mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="content-card p-8 rounded-2xl transition-all duration-300 cursor-pointer card-lift">
+                    <div class="w-16 h-16 rounded-full gradient-bg flex items-center justify-center mb-4 shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-blue-600 mb-2">Anonymous Counselling</h3>
+                    <p class="text-gray-700">Access confidential support anytime.</p>
+                </div>
+            </a>
+                <a href="PsychoeducationalHub.html">
+                    <div class="content-card p-8 rounded-2xl transition-all duration-300 cursor-pointer card-lift">
+                        <div class="w-16 h-16 rounded-full gradient-bg flex items-center justify-center mb-4 shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13a6.253 6.253 0 01-6.253 6.253H12V6.253zM12 6.253a6.253 6.253 0 006.253 6.253h-6.253V6.253z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-blue-600 mb-2">Psychoeducational Hub</h3>
+                        <p class="text-gray-700">Learn about mental health and well-being.</p>
+                    </div>
+                </a>
+                <div id="tracker-card" class="content-card p-8 rounded-2xl transition-all duration-300 cursor-pointer card-lift">
+                    <div class="w-16 h-16 rounded-full gradient-bg flex items-center justify-center mb-4 shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 012-2h2a2 2 0 012 2v6m0 0H9m-6 0h.01M21 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6m0 0V8a2 2 0 012-2h14a2 2 0 012 2v4m-18 0h18" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-blue-600 mb-2">Mood & Stress Tracker</h3>
+                    <p class="text-gray-700">Track your mood and find relief.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="mood-assessment" class="container mx-auto px-4 sm:px-6 lg:px-8 mb-24 hidden">
+            <div class="content-card rounded-2xl p-8">
+                <h2 class="text-3xl font-bold text-gradient mb-6 text-center">Student Mood Assessment</h2>
+                <p class="text-gray-700 text-center mb-8">Help us understand how you're feeling today</p>
+                
+                <button id="start-assessment" class="w-full gradient-bg text-white py-4 px-8 rounded-xl font-semibold text-lg hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    Start Assessment
+                </button>
+            </div>
+        </section>
+
+        <section id="health-graph" class="container mx-auto px-4 sm:px-6 lg:px-8 mb-24 hidden">
+            <div class="content-card rounded-2xl p-8">
+                <h2 class="text-3xl font-bold text-gradient mb-6 text-center">Your Wellness Journey</h2>
+                
+                <div class="flex justify-center mb-6">
+                    <div class="bg-gray-100/80 backdrop-blur-sm rounded-lg p-1 flex">
+                        <button id="lineChartBtn" class="px-4 py-2 rounded-md bg-white shadow-sm text-blue-600 font-medium transition-all">
+                            Trends
+                        </button>
+                        <button id="barChartBtn" class="px-4 py-2 rounded-md text-gray-600 font-medium hover:text-blue-600 transition-all">
+                            Analytics
+                        </button>
+                    </div>
+                </div>
+
+                <div id="lineChartContainer" class="bg-white/60 backdrop-blur-sm rounded-xl p-6 mb-6 border border-white/30">
+                    <canvas id="moodChart" width="400" height="200"></canvas>
+                </div>
+
+                <div id="barChartContainer" class="bg-white/60 backdrop-blur-sm rounded-xl p-6 mb-6 border border-white/30 hidden">
+                    <canvas id="barChart" width="400" height="200"></canvas>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-6">
+                    <div class="bg-blue-50/80 backdrop-blur-sm p-4 rounded-lg border border-blue-100">
+                        <div class="text-2xl font-bold text-blue-600" id="avg-mood">-</div>
+                        <div class="text-sm text-gray-700">Avg Mood</div>
+                    </div>
+                    <div class="bg-purple-50/80 backdrop-blur-sm p-4 rounded-lg border border-purple-100">
+                        <div class="text-2xl font-bold text-purple-600" id="avg-stress">-</div>
+                        <div class="text-sm text-gray-700">Avg Stress</div>
+                    </div>
+                    <div class="bg-green-50/80 backdrop-blur-sm p-4 rounded-lg border border-green-100">
+                        <div class="text-2xl font-bold text-green-600" id="avg-sleep">-</div>
+                        <div class="text-sm text-gray-700">Avg Sleep</div>
+                    </div>
+                    <div class="bg-orange-50/80 backdrop-blur-sm p-4 rounded-lg border border-orange-100">
+                        <div class="text-2xl font-bold text-orange-600" id="avg-energy">-</div>
+                        <div class="text-sm text-gray-700">Avg Energy</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-blue-50/80 backdrop-blur-sm p-4 rounded-lg border border-blue-100">
+                        <h4 class="font-semibold text-blue-800 mb-2">Mood Insights</h4>
+                        <div class="text-sm text-gray-700">
+                            <div class="flex justify-between">
+                                <span>Best Day:</span>
+                                <span id="best-mood-day">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Improvement:</span>
+                                <span id="mood-trend">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-purple-50/80 backdrop-blur-sm p-4 rounded-lg border border-purple-100">
+                        <h4 class="font-semibold text-purple-800 mb-2">Stress Analysis</h4>
+                        <div class="text-sm text-gray-700">
+                            <div class="flex justify-between">
+                                <span>Lowest Stress:</span>
+                                <span id="lowest-stress-day">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Stress Level:</span>
+                                <span id="stress-level">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-green-50/80 backdrop-blur-sm p-4 rounded-lg border border-green-100">
+                        <h4 class="font-semibold text-green-800 mb-2">Wellness Score</h4>
+                        <div class="text-sm text-gray-700">
+                            <div class="flex justify-between">
+                                <span>Overall Score:</span>
+                                <span id="wellness-score">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Status:</span>
+                                <span id="wellness-status">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="assessmentModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="modal-content rounded-2xl w-11/12 max-w-2xl p-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-gradient">Mood & Stress Assessment</h3>
+                <button id="closeAssessment" class="text-gray-500 hover:text-gray-900 text-2xl transition-colors">&times;</button>
+            </div>
+            
+            <form id="assessmentForm" class="space-y-6">
+                <div class="space-y-3">
+                    <label class="block text-lg font-semibold text-gray-800">How would you rate your overall mood today?</label>
+                    <div class="grid grid-cols-5 gap-2">
+                        <label class="flex flex-col items-center cursor-pointer">
+                            <input type="radio" name="mood" value="1" class="sr-only">
+                            <div class="mood-option w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-2xl hover:bg-red-200 transition-colors">😢</div>
+                            <span class="text-sm mt-1">Very Low</span>
+                        </label>
+                        <label class="flex flex-col items-center cursor-pointer">
+                            <input type="radio" name="mood" value="2" class="sr-only">
+                            <div class="mood-option w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-2xl hover:bg-orange-200 transition-colors">😕</div>
+                            <span class="text-sm mt-1">Low</span>
+                        </label>
+                        <label class="flex flex-col items-center cursor-pointer">
+                            <input type="radio" name="mood" value="3" class="sr-only">
+                            <div class="mood-option w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center text-2xl hover:bg-yellow-200 transition-colors">😐</div>
+                            <span class="text-sm mt-1">Neutral</span>
+                        </label>
+                        <label class="flex flex-col items-center cursor-pointer">
+                            <input type="radio" name="mood" value="4" class="sr-only">
+                            <div class="mood-option w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-2xl hover:bg-green-200 transition-colors">😊</div>
+                            <span class="text-sm mt-1">Good</span>
+                        </label>
+                        <label class="flex flex-col items-center cursor-pointer">
+                            <input type="radio" name="mood" value="5" class="sr-only">
+                            <div class="mood-option w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-2xl hover:bg-blue-200 transition-colors">😄</div>
+                            <span class="text-sm mt-1">Excellent</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="block text-lg font-semibold text-gray-800">What is your current stress level?</label>
+                    <div class="space-y-2">
+                        <input type="range" name="stress" min="1" max="10" value="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                        <div class="flex justify-between text-sm text-gray-600">
+                            <span>Low (1)</span>
+                            <span id="stress-value">5</span>
+                            <span>High (10)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="block text-lg font-semibold text-gray-800">How well did you sleep last night?</label>
+                    <select name="sleep" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Select sleep quality</option>
+                        <option value="1">Very Poor</option>
+                        <option value="2">Poor</option>
+                        <option value="3">Fair</option>
+                        <option value="4">Good</option>
+                        <option value="5">Excellent</option>
+                    </select>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="block text-lg font-semibold text-gray-800">How would you describe your energy level?</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="energy" value="1" class="sr-only">
+                            <div class="energy-option w-full p-3 border-2 border-gray-200 rounded-lg text-center hover:border-blue-400 transition-colors">Very Low</div>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="energy" value="2" class="sr-only">
+                            <div class="energy-option w-full p-3 border-2 border-gray-200 rounded-lg text-center hover:border-blue-400 transition-colors">Low</div>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="energy" value="3" class="sr-only">
+                            <div class="energy-option w-full p-3 border-2 border-gray-200 rounded-lg text-center hover:border-blue-400 transition-colors">Moderate</div>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="energy" value="4" class="sr-only">
+                            <div class="energy-option w-full p-3 border-2 border-gray-200 rounded-lg text-center hover:border-blue-400 transition-colors">High</div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="block text-lg font-semibold text-gray-800">How stressed do you feel about your studies?</label>
+                    <div class="space-y-2">
+                        <input type="range" name="academic-stress" min="1" max="10" value="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                        <div class="flex justify-between text-sm text-gray-600">
+                            <span>Not Stressed (1)</span>
+                            <span id="academic-stress-value">5</span>
+                            <span>Very Stressed (10)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="block text-lg font-semibold text-gray-800">How connected do you feel to others?</label>
+                    <div class="grid grid-cols-1 gap-2">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="social" value="1" class="sr-only">
+                            <div class="social-option w-full p-3 border-2 border-gray-200 rounded-lg text-center hover:border-blue-400 transition-colors">Very Isolated</div>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="social" value="2" class="sr-only">
+                            <div class="social-option w-full p-3 border-2 border-gray-200 rounded-lg text-center hover:border-blue-400 transition-colors">Somewhat Isolated</div>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="social" value="3" class="sr-only">
+                            <div class="social-option w-full p-3 border-2 border-gray-200 rounded-lg text-center hover:border-blue-400 transition-colors">Neutral</div>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="social" value="4" class="sr-only">
+                            <div class="social-option w-full p-3 border-2 border-gray-200 rounded-lg text-center hover:border-blue-400 transition-colors">Well Connected</div>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="social" value="5" class="sr-only">
+                            <div class="social-option w-full p-3 border-2 border-gray-200 rounded-lg text-center hover:border-blue-400 transition-colors">Very Connected</div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-4 pt-4">
+                    <button type="button" id="cancelAssessment" class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
+                    <button type="submit" class="px-6 py-3 gradient-bg text-white rounded-lg hover:opacity-90 transition-opacity">Submit Assessment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="profileModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="modal-content rounded-2xl w-11/12 max-w-md p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold text-gray-900">Your Profile</h3>
+                <button id="closeProfile" class="text-gray-500 hover:text-gray-900 transition-colors">&times;</button>
+            </div>
+            <form id="profileForm" class="space-y-4">
+                <div class="flex items-center gap-4">
+                    <img id="profilePreview" class="w-14 h-14 rounded-full object-cover border-2 border-white shadow-lg" src="https://picsum.photos/56/56" alt="profile">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Display name</label>
+                        <input id="profileName" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Your name">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Photo URL</label>
+                    <input id="profilePhoto" class="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="https://...">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" id="logoutFromIndex1" class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">Logout</button>
+                    <button type="submit" class="px-4 py-2 rounded-lg gradient-bg text-white hover:opacity-90 transition-opacity">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CHATBOT HTML ELEMENTS -->
+    <div id="chatbot-icon" aria-label="Open chat" role="button" tabindex="0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V3a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </div>
+
+    <div id="overlay"></div>
+
+    <div id="chatbot-panel">
+        <header class="flex items-center justify-between p-4 h-20" style="background: linear-gradient(to right, #0A0F0F, #1E2B2B);">
+            <div class="flex items-center space-x-2">
+                <div class="flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-3.86 0-7-3.14-7-7 0-.71.1-1.4.29-2.06.66 1.48 1.96 2.54 3.51 2.87 1.8.38 3.65-.21 5.07-1.43 1.09-.94 1.83-2.14 2.15-3.48.3-.12.61-.21.93-.25 3.19.86 5.37 3.86 5.05 7.02-.19 1.93-1.12 3.69-2.5 5.06-1.55 1.58-3.71 2.45-6.04 2.45z" fill="#3E5959"/>
+                        <path d="M12 16.5c2.4 0 4.5-1.5 5.2-3.6M12 7.5c-2.4 0-4.5 1.5-5.2 3.6" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" fill="#FFFFFF"/>
+                        <path d="M12 12c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1z" fill="white"/>
+                    </svg>
+                </div>
+                <div class="flex flex-col">
+                    <h2 class="text-xl font-bold text-white font-['Poppins']">MindCare</h2>
+                </div>
+            </div>
+             <button id="close-button" class="text-white hover:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </header>
+        
+        <div id="intro-screen">
+            <h3 class="text-xl font-semibold mb-8 text-white">Hi! I'm a virtual assistant. How can I help you today?</h3>
+            <button id="hello-button" class="px-6 py-2 bg-[#3E5959] text-white rounded-full font-semibold hover:bg-[#557777] transition-colors">Hello</button>
+        </div>
+
+        <div id="chat-history" class="flex-1 overflow-y-auto p-4 space-y-4 hidden"></div>
+
+        <footer id="input-area" class="p-4 border-t border-gray-700 bg-[#1A1F1F] flex items-center space-x-2 shadow-inner hidden">
+            <input type="text" id="message-input" class="flex-1 p-3 rounded-full border border-gray-600 bg-transparent text-white focus:outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-400" placeholder="Type something...">
+            <button id="send-button" class="w-10 h-10 flex items-center justify-center rounded-full text-white bg-[#3E5959] hover:bg-[#557777] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- CHATBOT SCRIPT ---
+            const chatbotIcon = document.getElementById('chatbot-icon');
+            const chatbotPanel = document.getElementById('chatbot-panel');
+            const closeButton = document.getElementById('close-button');
+            const overlay = document.getElementById('overlay');
+            const introScreen = document.getElementById('intro-screen');
+            const helloButton = document.getElementById('hello-button');
+            const chatHistory = document.getElementById('chat-history');
+            const inputArea = document.getElementById('input-area');
+            const messageInput = document.getElementById('message-input');
+            const sendButton = document.getElementById('send-button');
+
+            const apiKey = "AIzaSyAtqUmyLNEuY9DhtKnXLyDONawaRl4Jum8"; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const welcomeMessage = "Hi, I'm MindCare, your confidential mental health buddy. I'm here to listen, support, and guide you with stress, anxiety, and wellbeing. Remember, everything we discuss is private and confidential. How can I help you today?";
+
+            function appendMessage(sender, text) {
+                const messageContainer = document.createElement('div');
+                const isUser = sender === 'user';
+                
+                messageContainer.classList.add('message-bubble', 'rounded-lg', 'shadow-md', 'message-fade-in');
+
+                if (isUser) {
+                    messageContainer.classList.add('user');
+                    messageContainer.textContent = text;
+                    chatHistory.appendChild(messageContainer);
+                } else {
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add('bot-message-wrapper', 'message-fade-in');
+                    const avatar = document.createElement('div');
+                    avatar.classList.add('bot-avatar');
+                    avatar.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2" ry="2"></rect><circle cx="12" cy="5" r="3"></circle><path d="M7 11v-1a5 5 0 0 1 10 0v1"></path></svg>`;
+                    
+                    messageContainer.classList.add('bot');
+                    messageContainer.innerHTML = text;
+                    
+                    wrapper.appendChild(avatar);
+                    wrapper.appendChild(messageContainer);
+                    chatHistory.appendChild(wrapper);
+                }
+                
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            }
+
+            function getSpecificHelpResponse(message) {
+                const lowerCaseMsg = message.toLowerCase();
+                if (lowerCaseMsg.includes('emergency') || lowerCaseMsg.includes('dying') || lowerCaseMsg.includes('suicidal') || lowerCaseMsg.includes('kill myself') || lowerCaseMsg.includes('killing myself') || lowerCaseMsg.includes('end my life') || lowerCaseMsg.includes('want to die') || lowerCaseMsg.includes('hopeless')) {
+                    return `I hear you, and I want you to know you are not alone. Please reach out for help immediately. Here are trusted mental health helplines in India:<br><br>1. <a href="tel:18005990019" class="text-blue-400 underline">KIRAN (24/7 National Helpline): 1800-599-0019</a> <br>2. <a href="tel:+912227546669" class="text-blue-400 underline">AASRA (Suicide Prevention): +91-22-27546669 / 27546667</a> <br>3. <a href="tel:18602662345" class="text-blue-400 underline">Vandrevala Foundation Helpline: 1860-2662-345 / 9999-666-555</a> <br><br>If you are in immediate danger, please call these numbers right now. You can also book a confidential session with a counsellor immediately through our website’s Anonymous Counselling section. A professional can support you right away.`;
+                }
+                if (lowerCaseMsg.includes('book') || lowerCaseMsg.includes('reading')) {
+                    return "Reading can be a great way to relax. You might like 'The Midnight Library' by Matt Haig or 'Reasons to Stay Alive' by Matt Haig. They are often comforting.";
+                }
+                if (lowerCaseMsg.includes('audio') || lowerCaseMsg.includes('meditation') || lowerCaseMsg.includes('podcast')) {
+                    return "Listening to calming audios can really help. Try guided meditations or stress-relief podcasts on YouTube or Spotify.";
+                }
+                if (lowerCaseMsg.includes('breathing') || lowerCaseMsg.includes('exercise') || lowerCaseMsg.includes('breathe')) {
+                    return "Try the 4-7-8 breathing technique: Inhale for 4 seconds, hold for 7 seconds, and exhale for 8 seconds. It's scientifically proven to calm stress.";
+                }
+                if (lowerCaseMsg.includes('coping mechanism') || lowerCaseMsg.includes('stress')) {
+                    return "Healthy coping can be journaling, walking, listening to music, or talking with friends. Which one works best for you?";
+                }
+                if (lowerCaseMsg.includes('psychologist') || lowerCaseMsg.includes('counselor') || lowerCaseMsg.includes('therapist') || lowerCaseMsg.includes('professional help') || lowerCaseMsg.includes('helpline')) {
+                    return "It takes courage to reach out. You can directly call KIRAN 1800-599-0019, or use our website's Anonymous Counselling booking feature to talk to a professional privately.";
+                }
+                return null;
+            }
+
+            async function sendMessage() {
+                const userMessage = messageInput.value.trim();
+                if (userMessage === '') return;
+
+                appendMessage('user', userMessage);
+                messageInput.value = '';
+                sendButton.disabled = true;
+
+                const typingIndicator = document.createElement('div');
+                typingIndicator.classList.add('typing-indicator', 'self-start');
+                typingIndicator.innerHTML = `<span></span><span></span><span></span>`;
+                chatHistory.appendChild(typingIndicator);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                const specificResponse = getSpecificHelpResponse(userMessage);
+
+                if (specificResponse) {
+                    setTimeout(() => {
+                        chatHistory.removeChild(typingIndicator);
+                        appendMessage('bot', specificResponse);
+                    }, 1000);
+                } else {
+                    try {
+                        const payload = {
+                            contents: [{ parts: [{ text: userMessage }] }],
+                            systemInstruction: { parts: [{ text: `You are a supportive and empathetic digital companion named MindCare. Your goal is to provide a safe, non-judgmental space for students to talk about their feelings. Use a warm, gentle, and conversational tone. Acknowledge the user's emotions and respond with care. Keep your responses short, simple, and direct. Do not give medical advice, diagnoses, or treatment plans. Refer the user to professional resources when appropriate.` }] },
+                        };
+
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        
+                        const result = await response.json();
+                        const botResponse = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                        
+                        chatHistory.removeChild(typingIndicator);
+                        
+                        if (botResponse) {
+                            appendMessage('bot', botResponse);
+                        } else {
+                            appendMessage('bot', "I'm sorry, I couldn't generate a response. Please try again or check your connection.");
+                        }
+                    } catch (error) {
+                        chatHistory.removeChild(typingIndicator);
+                        appendMessage('bot', 'An error occurred. Please check your network connection and try again.');
+                    }
+                }
+            }
+
+            chatbotIcon.addEventListener('click', () => {
+                chatbotPanel.classList.add('open');
+                overlay.classList.add('active');
+            });
+            
+            helloButton.addEventListener('click', () => {
+                if (introScreen && introScreen.parentNode) {
+                    introScreen.parentNode.removeChild(introScreen);
+                }
+                chatHistory.classList.remove('hidden');
+                inputArea.classList.remove('hidden');
+                inputArea.classList.add('flex');
+                appendMessage('bot', welcomeMessage);
+                messageInput.focus();
+
+                // Hide the floating chatbot icon
+                chatbotIcon.style.display = 'none';
+            });
+
+            const closeChat = () => {
+                chatbotPanel.classList.remove('open');
+                overlay.classList.remove('active');
+            }
+
+            closeButton.addEventListener('click', closeChat);
+            overlay.addEventListener('click', closeChat);
+
+            sendButton.addEventListener("click", sendMessage);
+            messageInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    sendMessage();
+                }
+            });
+
+            messageInput.addEventListener('input', () => {
+                sendButton.disabled = messageInput.value.trim() === '';
+            });
+            sendButton.disabled = true;
+
+            // --- MOOD TRACKER & DASHBOARD SCRIPT ---
+            const trackerCard = document.getElementById('tracker-card');
+            const moodAssessment = document.getElementById('mood-assessment');
+            const healthGraph = document.getElementById('health-graph');
+            const startAssessmentBtn = document.getElementById('start-assessment');
+            const assessmentModal = document.getElementById('assessmentModal');
+            const closeAssessment = document.getElementById('closeAssessment');
+            const cancelAssessment = document.getElementById('cancelAssessment');
+            const assessmentForm = document.getElementById('assessmentForm');
+            const stressSlider = document.querySelector('input[name="stress"]');
+            const stressValue = document.getElementById('stress-value');
+            const academicStressSlider = document.querySelector('input[name="academic-stress"]');
+            const academicStressValue = document.getElementById('academic-stress-value');
+            const lineChartBtn = document.getElementById('lineChartBtn');
+            const barChartBtn = document.getElementById('barChartBtn');
+            const lineChartContainer = document.getElementById('lineChartContainer');
+            const barChartContainer = document.getElementById('barChartContainer');
+
+            let assessmentData = JSON.parse(localStorage.getItem('moodData')) || [];
+            stressSlider?.addEventListener('input', (e) => { stressValue.textContent = e.target.value; });
+            academicStressSlider?.addEventListener('input', (e) => { academicStressValue.textContent = e.target.value; });
+
+            document.querySelectorAll('input[name="mood"]').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    document.querySelectorAll('.mood-option').forEach(option => option.classList.remove('ring-4', 'ring-blue-400'));
+                    e.target.nextElementSibling.classList.add('ring-4', 'ring-blue-400');
+                });
+            });
+
+            document.querySelectorAll('input[name="energy"]').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    document.querySelectorAll('.energy-option').forEach(option => option.classList.remove('border-blue-400', 'bg-blue-50'));
+                    e.target.nextElementSibling.classList.add('border-blue-400', 'bg-blue-50');
+                });
+            });
+            
+            document.querySelectorAll('input[name="social"]').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    document.querySelectorAll('.social-option').forEach(option => option.classList.remove('border-blue-400', 'bg-blue-50'));
+                    e.target.nextElementSibling.classList.add('border-blue-400', 'bg-blue-50');
+                });
+            });
+            
+            trackerCard.addEventListener('click', () => {
+                moodAssessment.classList.remove('hidden');
+                moodAssessment.scrollIntoView({ behavior: 'smooth' });
+            });
+
+            startAssessmentBtn.addEventListener('click', () => {
+                assessmentModal.classList.remove('hidden');
+                assessmentModal.classList.add('flex');
+            });
+
+            const closeModal = () => {
+                assessmentModal.classList.add('hidden');
+                assessmentModal.classList.remove('flex');
+            };
+
+            closeAssessment.addEventListener('click', closeModal);
+            cancelAssessment.addEventListener('click', closeModal);
+            assessmentModal.addEventListener('click', (e) => { if (e.target === assessmentModal) closeModal(); });
+
+            assessmentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = {
+                    date: new Date().toLocaleDateString('en-US', { weekday: 'short' }),
+                    fullDate: new Date().toLocaleDateString(),
+                    mood: parseInt(formData.get('mood')),
+                    stress: parseInt(formData.get('stress')),
+                    sleep: parseInt(formData.get('sleep')),
+                    energy: parseInt(formData.get('energy')),
+                    academicStress: parseInt(formData.get('academic-stress')),
+                    social: parseInt(formData.get('social')),
+                    timestamp: Date.now()
+                };
+
+                if (!data.mood || !data.sleep || !data.energy || !data.social) {
+                    alert('Please complete all fields');
+                    return;
+                }
+
+                assessmentData.push(data);
+                localStorage.setItem('moodData', JSON.stringify(assessmentData));
+                closeModal();
+                healthGraph.classList.remove('hidden');
+                healthGraph.scrollIntoView({ behavior: 'smooth' });
+                updateChart();
+                updateStats();
+                alert('Assessment completed! Your data has been recorded.');
+            });
+
+            let chart = null;
+            let barChart = null;
+
+            const updateChart = () => {
+                const ctx = document.getElementById('moodChart').getContext('2d');
+                if (chart) chart.destroy();
+                const last7Days = assessmentData.slice(-7);
+                const labels = last7Days.map(d => d.date);
+                chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: 'Mood', data: last7Days.map(d => d.mood), borderColor: '#4A90E2', backgroundColor: 'rgba(74, 144, 226, 0.2)', tension: 0.4, fill: true, borderWidth: 3 },
+                            { label: 'Stress', data: last7Days.map(d => 11 - d.stress), borderColor: '#D2691E', backgroundColor: 'rgba(210, 105, 30, 0.1)', tension: 0.4, fill: false, borderWidth: 2, borderDash: [5, 5] }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 5, ticks: { stepSize: 1, callback: (v) => ['','Low','Low','Medium','High','High'][v]||'' } }, x: {} }, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Your Wellness Trends (Last 7 Entries)' } } }
+                });
+            };
+
+            const updateBarChart = () => {
+                const ctx = document.getElementById('barChart').getContext('2d');
+                if (barChart) barChart.destroy();
+                const last7Days = assessmentData.slice(-7);
+                const labels = last7Days.map(d => d.date);
+                barChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: 'Mood', data: last7Days.map(d => d.mood), backgroundColor: 'rgba(74, 144, 226, 0.8)', borderColor: '#4A90E2', borderWidth: 2, borderRadius: 8 },
+                            { label: 'Energy', data: last7Days.map(d => d.energy), backgroundColor: 'rgba(255, 159, 64, 0.8)', borderColor: '#FF9F40', borderWidth: 2, borderRadius: 8 },
+                            { label: 'Sleep Quality', data: last7Days.map(d => d.sleep), backgroundColor: 'rgba(75, 192, 192, 0.8)', borderColor: '#4BC0C0', borderWidth: 2, borderRadius: 8 },
+                            { label: 'Social Connection', data: last7Days.map(d => d.social), backgroundColor: 'rgba(153, 102, 255, 0.8)', borderColor: '#9966FF', borderWidth: 2, borderRadius: 8 }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 5, ticks: { stepSize: 1, callback: (v) => ['','Low','Low','Medium','High','High'][v]||'' } } }, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Wellness Analytics - Detailed Breakdown' } }, interaction: { intersect: false, mode: 'index' } }
+                });
+            };
+
+            const updateStats = () => {
+                if (assessmentData.length === 0) return;
+                const recent = assessmentData.slice(-7);
+                const avg = (arr, key) => (arr.reduce((s, d) => s + d[key], 0) / arr.length).toFixed(1);
+                document.getElementById('avg-mood').textContent = avg(recent, 'mood');
+                document.getElementById('avg-stress').textContent = avg(recent, 'stress');
+                document.getElementById('avg-sleep').textContent = avg(recent, 'sleep');
+                document.getElementById('avg-energy').textContent = avg(recent, 'energy');
+                const bestMoodEntry = recent.reduce((max, d) => d.mood > max.mood ? d : max, recent[0]);
+                const lowestStressEntry = recent.reduce((min, d) => d.stress < min.stress ? d : min, recent[0]);
+                document.getElementById('best-mood-day').textContent = bestMoodEntry?.date || '-';
+                document.getElementById('lowest-stress-day').textContent = lowestStressEntry?.date || '-';
+                const firstHalfAvg = avg(recent.slice(0, Math.ceil(recent.length / 2)), 'mood');
+                const secondHalfAvg = avg(recent.slice(Math.ceil(recent.length / 2)), 'mood');
+                document.getElementById('mood-trend').textContent = secondHalfAvg > firstHalfAvg ? '↗️ Improving' : secondHalfAvg < firstHalfAvg ? '↘️ Declining' : '→ Stable';
+                const avgStressVal = parseFloat(avg(recent, 'stress'));
+                document.getElementById('stress-level').textContent = avgStressVal <= 3 ? 'Low' : avgStressVal <= 6 ? 'Moderate' : 'High';
+                const wellnessScore = ((parseFloat(avg(recent, 'mood')) + parseFloat(avg(recent, 'sleep')) + parseFloat(avg(recent, 'energy')) + (11 - avgStressVal)) / 4).toFixed(1);
+                document.getElementById('wellness-score').textContent = wellnessScore + '/5';
+                document.getElementById('wellness-status').textContent = wellnessScore >= 4 ? 'Excellent' : wellnessScore >= 3 ? 'Good' : 'Needs Attention';
+            };
+
+            lineChartBtn.addEventListener('click', () => {
+                lineChartContainer.classList.remove('hidden');
+                barChartContainer.classList.add('hidden');
+                lineChartBtn.classList.add('bg-white', 'shadow-sm', 'text-blue-600');
+                lineChartBtn.classList.remove('text-gray-600');
+                barChartBtn.classList.remove('bg-white', 'shadow-sm', 'text-blue-600');
+                barChartBtn.classList.add('text-gray-600');
+            });
+
+            barChartBtn.addEventListener('click', () => {
+                barChartContainer.classList.remove('hidden');
+                lineChartContainer.classList.add('hidden');
+                barChartBtn.classList.add('bg-white', 'shadow-sm', 'text-blue-600');
+                barChartBtn.classList.remove('text-gray-600');
+                lineChartBtn.classList.remove('bg-white', 'shadow-sm', 'text-blue-600');
+                lineChartBtn.classList.add('text-gray-600');
+                updateBarChart();
+            });
+
+            if (assessmentData.length > 0) {
+                healthGraph.classList.remove('hidden');
+                updateChart();
+                updateStats();
+            }
+        });
+    </script>
+</body>
+</html>

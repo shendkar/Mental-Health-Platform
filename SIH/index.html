@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Psychological Intervention System - Problem Statement</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        
+        // Firebase configuration 
+        const firebaseConfig = {
+            apiKey: "AIzaSyBe4RdEyiTs6TfwX8cY6CeAeE1t_N7OuBI",
+            authDomain: "mentalhealthplatform-30f98.firebaseapp.com",
+            projectId: "mentalhealthplatform-30f98",
+            storageBucket: "mentalhealthplatform-30f98.firebasestorage.app",
+            messagingSenderId: "516787619682",
+            appId: "1:516787619682:web:475cb14f99a6c8ca5ece3b"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+      
+        window.firebaseAuth = auth;
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-heart"></i>
+                <span>Mental Health Initiative</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#overview" class="nav-link">Overview</a></li>
+                <li><a href="#problem" class="nav-link">Problem</a></li>
+                <li><a href="#solution" class="nav-link">Solution</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#data" class="nav-link">Data</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button id="loginBtn" class="nav-btn nav-btn-outline"><i class="fas fa-sign-in-alt"></i><span>Login</span></button>
+                <button id="signupBtn" class="nav-btn nav-btn-primary"><i class="fas fa-user-plus"></i><span>Sign Up</span></button>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Digital Psychological Intervention System
+                </h1>
+                <p class="hero-subtitle">
+                    Bridging the gap in mental health support for college students through technology
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">73%</span>
+                        <span class="stat-label">Students report mental health issues</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">85%</span>
+                        <span class="stat-label">Underutilize counseling services</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">60%</span>
+                        <span class="stat-label">Rural colleges lack support</span>
+                    </div>
+                </div>
+                <a href="#overview" class="cta-button">
+                    <i class="fas fa-arrow-down"></i>
+                    Explore Solution
+                </a>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-card card-1">
+                    <i class="fas fa-comments"></i>
+                    <span>AI Chat Support</span>
+                </div>
+                <div class="floating-card card-2">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Easy Booking</span>
+                </div>
+                <div class="floating-card card-3">
+                    <i class="fas fa-users"></i>
+                    <span>Peer Support</span>
+                </div>
+                <div class="floating-card card-4">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Problem Context</h2>
+                <p class="section-subtitle">Understanding the mental health crisis in higher education</p>
+            </div>
+            <div class="context-grid">
+                <div class="context-card">
+                    <div class="card-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>College Students at Risk</h3>
+                    <p>Mental health issues among college students have significantly increased in recent years, including anxiety, depression, burnout, sleep disorders, academic stress, and social isolation.</p>
+                </div>
+                <div class="context-card">
+                    <div class="card-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Rural & Semi-Urban Gap</h3>
+                    <p>There is a major gap in the availability, accessibility, and stigma-free delivery of mental health support in most higher education institutions, especially in rural and semi-urban colleges.</p>
+                </div>
+                <div class="context-card">
+                    <div class="card-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Critical Need</h3>
+                    <p>The current system lacks structured, scalable, and stigma-free psychological intervention mechanisms that can reach students when they need help most.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section id="problem" class="section problem-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Problems Faced</h2>
+                <p class="section-subtitle">Key challenges in current mental health support systems</p>
+            </div>
+            <div class="problems-grid">
+                <div class="problem-item">
+                    <div class="problem-number">01</div>
+                    <div class="problem-content">
+                        <h3>Absence of Structured System</h3>
+                        <p>No structured, scalable, and stigma-free psychological intervention system exists in most institutions.</p>
+                    </div>
+                </div>
+                <div class="problem-item">
+                    <div class="problem-number">02</div>
+                    <div class="problem-content">
+                        <h3>Lack of Early Detection</h3>
+                        <p>No early detection and preventive mental health tools are available to identify at-risk students.</p>
+                    </div>
+                </div>
+                <div class="problem-item">
+                    <div class="problem-number">03</div>
+                    <div class="problem-content">
+                        <h3>Under-utilization of Services</h3>
+                        <p>College counseling centres are under-utilized due to fear of judgment or lack of awareness among students.</p>
+                    </div>
+                </div>
+                <div class="problem-item">
+                    <div class="problem-number">04</div>
+                    <div class="problem-content">
+                        <h3>No Centralized Monitoring</h3>
+                        <p>No centralized mental health monitoring or data-driven policy framework exists within institutions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section id="solution" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Proposed Technological Solution</h2>
+                <p class="section-subtitle">Digital Psychological Intervention System (Web & Mobile)</p>
+            </div>
+            <div class="solution-overview">
+                <div class="solution-text">
+                    <h3>Comprehensive Digital Platform</h3>
+                    <p>Develop a Digital Psychological Intervention System that addresses the critical gaps in mental health support for college students through innovative technology solutions.</p>
+                    <div class="solution-benefits">
+                        <div class="benefit">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Stigma-free access to mental health support</span>
+                        </div>
+                        <div class="benefit">
+                            <i class="fas fa-check-circle"></i>
+                            <span>24/7 availability and immediate response</span>
+                        </div>
+                        <div class="benefit">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Data-driven insights for institutional planning</span>
+                        </div>
+                        <div class="benefit">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Cultural and regional customization</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="solution-visual">
+                    <div class="platform-mockup">
+                        <div class="mockup-header">
+                            <div class="mockup-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="mockup-content">
+                            <div class="mockup-feature active">
+                                <i class="fas fa-robot"></i>
+                                <span>AI Chat Support</span>
+                            </div>
+                            <div class="mockup-feature">
+                                <i class="fas fa-calendar"></i>
+                                <span>Booking System</span>
+                            </div>
+                            <div class="mockup-feature">
+                                <i class="fas fa-book"></i>
+                                <span>Resources</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>System Features</h2>
+                <p class="section-subtitle">Five core capabilities of the digital intervention system</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI-guided First-Aid Support</h3>
+                    <p>Interactive chat box that offers coping strategies and refers students to professionals when needed. Provides immediate emotional support and crisis intervention.</p>
+                    <div class="feature-tags">
+                        <span class="tag">24/7 Available</span>
+                        <span class="tag">Crisis Support</span>
+                        <span class="tag">Professional Referral</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Confidential Booking System</h3>
+                    <p>Secure appointment booking for on-campus counselors or mental health helplines. Ensures privacy and removes barriers to seeking help.</p>
+                    <div class="feature-tags">
+                        <span class="tag">Privacy Protected</span>
+                        <span class="tag">Easy Scheduling</span>
+                        <span class="tag">Reminder System</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Psychoeducational Resource Hub</h3>
+                    <p>Comprehensive library of videos, relaxation audio, and mental wellness guides available in regional languages for cultural relevance.</p>
+                    <div class="feature-tags">
+                        <span class="tag">Multilingual</span>
+                        <span class="tag">Cultural Context</span>
+                        <span class="tag">Self-Help Tools</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Peer Support Platform</h3>
+                    <p>Moderated peer-to-peer support forum with trained student volunteers. Creates a safe space for shared experiences and mutual support.</p>
+                    <div class="feature-tags">
+                        <span class="tag">Peer Connection</span>
+                        <span class="tag">Moderated</span>
+                        <span class="tag">Trained Volunteers</span>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Admin Dashboard</h3>
+                    <p>Anonymous data analytics for authorities to recognize trends and plan interventions. Enables data-driven mental health policy decisions.</p>
+                    <div class="feature-tags">
+                        <span class="tag">Anonymous Data</span>
+                        <span class="tag">Trend Analysis</span>
+                        <span class="tag">Policy Support</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Need Section -->
+    <section class="section need-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why a Custom Digital Platform?</h2>
+                <p class="section-subtitle">Addressing the limitations of existing solutions</p>
+            </div>
+            <div class="need-content">
+                <div class="need-problems">
+                    <h3>Current Solutions Fall Short</h3>
+                    <div class="problem-list">
+                        <div class="problem-point">
+                            <i class="fas fa-times-circle"></i>
+                            <span>Generic, Western-oriented apps</span>
+                        </div>
+                        <div class="problem-point">
+                            <i class="fas fa-times-circle"></i>
+                            <span>Paid services create barriers</span>
+                        </div>
+                        <div class="problem-point">
+                            <i class="fas fa-times-circle"></i>
+                            <span>No regional cultural context</span>
+                        </div>
+                        <div class="problem-point">
+                            <i class="fas fa-times-circle"></i>
+                            <span>Lack of institution-specific customization</span>
+                        </div>
+                        <div class="problem-point">
+                            <i class="fas fa-times-circle"></i>
+                            <span>No offline support mapping</span>
+                        </div>
+                        <div class="problem-point">
+                            <i class="fas fa-times-circle"></i>
+                            <span>Missing real-time analytics for admin</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="need-solution">
+                    <h3>Our Tailored Solution</h3>
+                    <div class="solution-points">
+                        <div class="solution-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Open-source and accessible</span>
+                        </div>
+                        <div class="solution-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Regional language support</span>
+                        </div>
+                        <div class="solution-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Institution-specific customization</span>
+                        </div>
+                        <div class="solution-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Integrated with college counselors</span>
+                        </div>
+                        <div class="solution-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Real-time admin analytics</span>
+                        </div>
+                        <div class="solution-point">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Cultural context integration</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Mental Health Initiative</h3>
+                    <p>Bridging the gap in mental health support for college students through innovative technology solutions.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#problem">Problem</a></li>
+                        <li><a href="#solution">Solution</a></li>
+                        <li><a href="#features">Features</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Department of Student Welfare<br>
+                    Department of Psychology<br>
+                    Internal Quality Assurance Cell (IQAC)</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Digital Psychological Intervention System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modals -->
+    <div id="authOverlay" class="modal-overlay hidden"></div>
+    <div id="messageDialog" class="toast hidden" role="alert" aria-live="assertive"></div>
+
+    <div id="loginModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+        <div class="modal-header">
+            <h3 id="loginTitle"><i class="fas fa-sign-in-alt"></i> Login</h3>
+            <button class="modal-close" data-close-modal>&times;</button>
+        </div>
+        <form id="loginForm" class="modal-body">
+            <label>Email
+                <input type="email" id="loginEmail" required placeholder="">
+            </label>
+            <label>Password
+                <input type="password" id="loginPassword" required placeholder="••••••••">
+            </label>
+            <button type="submit" class="btn btn-primary full"><i class="fas fa-unlock"></i> Login</button>
+        </form>
+        <div class="modal-footer">
+            <span>Don’t have an account?</span>
+            <button type="button" class="link" data-switch-to="signup">Sign Up</button>
+        </div>
+    </div>
+
+    <div id="signupModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+        <div class="modal-header">
+            <h3 id="signupTitle"><i class="fas fa-user-plus"></i> Create account</h3>
+            <button class="modal-close" data-close-modal>&times;</button>
+        </div>
+        <form id="signupForm" class="modal-body">
+            <label>Full name
+                <input type="text" id="signupName" required placeholder="Your name">
+            </label>
+            <label>Email
+                <input type="email" id="signupEmail" required placeholder="">
+            </label>
+            <label>Password
+                <input type="password" id="signupPassword" required minlength="6" placeholder="At least 6 characters">
+            </label>
+            <label>Confirm password
+                <input type="password" id="signupConfirm" required minlength="6" placeholder="Re-enter password">
+            </label>
+            <button type="submit" class="btn btn-primary full"><i class="fas fa-user-check"></i> Create account</button>
+        </form>
+        <div class="modal-footer">
+            <span>Already have an account?</span>
+            <button type="button" class="link" data-switch-to="login">Login</button>
+        </div>
+    </div>
+
+    <!-- App Scripts -->
+    <script src="script.js"></script>
+    <script>
+        
+        window.firebaseConfig = {
+            apiKey: "AIzaSyBe4RdEyiTs6TfwX8cY6CeAeE1t_N7OuBI",
+            authDomain: "mentalhealthplatform-30f98.firebaseapp.com",
+            projectId: "mentalhealthplatform-30f98",
+            storageBucket: "mentalhealthplatform-30f98.firebasestorage.app",
+            messagingSenderId: "516787619682",
+            appId: "1:516787619682:web:475cb14f99a6c8ca5ece3b"
+        };
+    </script>
+    <script type="module" src="auth.js"></script>
+</body>
+</html>

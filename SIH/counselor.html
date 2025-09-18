@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counselling Session Booking</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons CDN for a clean icon set -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3/dist/phosphor.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #3A7BD5 0%, #5A4FCF 100%); 
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #4A90E2, #7B68EE); 
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1), 0 8px 8px rgba(0,0,0,0.1);
+        }
+        .chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            @apply bg-gray-300 rounded-full;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            @apply bg-transparent;
+        }
+        .sos-pulse {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .queue-animation {
+            animation: heartbeat 1s infinite;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.05); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .feedback-star:hover {
+            transform: scale(1.2);
+            color: #ffc107;
+        }
+        .glassmorphism-card {
+            background: linear-gradient(135deg, rgba(47, 127, 239, 0.5), rgba(100, 90, 207, 0.5)); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        }
+        .glass-border {
+            border: 2px solid transparent;
+            border-image: linear-gradient(135deg, #4A90E2 0%, #7B68EE 100%) 1;
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+        }
+        .time-slot.selected {
+            @apply bg-blue-600 text-white shadow-lg;
+            transform: translateY(-2px);
+        }
+        .day-card.selected {
+            @apply bg-blue-600 text-white shadow-lg;
+        }
+        .typing-container {
+            display: inline-block;
+        }
+
+        .typing-animation {
+            display: inline-block;
+            overflow: hidden; 
+            white-space: nowrap; 
+            border-right: 2px solid; 
+            width: 0; 
+            animation: typing 3s steps(30, end), blink-caret 0.75s step-end infinite;
+        }
+
+        /* Typing effect */
+        @keyframes typing {
+            from {
+                width: 0; 
+            }
+            to {
+                width: 100%; 
+            }
+        }
+
+        /* Blinking caret effect */
+        @keyframes blink-caret {
+            from,
+            to {
+                border-color: transparent;
+            }
+            50% {
+                border-color: white;
+            }
+        }
+        .active-tab {
+            border-bottom: 4px solid #4A90E2 !important;
+        }
+    </style>
+</head>
+<body class="bg-white">
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="text-center py-12">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gradient mb-4">
+                Talk to Someone You Trust
+            </h1>
+            <p class="text-xl sm:text-2xl font-light text-gray-600">Find the right support for you</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Tabbed Interface -->
+        <div class="glassmorphism-card rounded-2xl p-6 shadow-xl relative overflow-hidden bg-white/40">
+            <nav class="mb-8 border-b-2 border-gray-200">
+                <ul class="flex">
+                    <li class="mr-6">
+                        <button id="booking-tab-btn" class="py-2 px-4 font-semibold text-lg text-gray-600 border-b-4 border-transparent transition-colors hover:text-gray-800 active-tab">Book Session</button>
+                    </li>
+                    <li class="mr-6">
+                        <button id="dashboard-tab-btn" class="py-2 px-4 font-semibold text-lg text-gray-600 border-b-4 border-transparent transition-colors hover:text-gray-800">My Sessions</button>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Booking Tab Content -->
+            <div id="booking-tab-content" class="tab-content">
+                <!-- Counsellor & Peer Matching Section -->
+                <section id="counsellor-list" class="mb-12">
+                    <div class="flex flex-col sm:flex-row items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4 sm:mb-0">Available Counsellors & Volunteers</h2>
+                        <div class="relative w-full sm:w-auto">
+                            <input type="text" id="search-input" placeholder="Search by name or specialty..." class="w-full sm:w-64 px-4 py-2 rounded-full bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">
+                            <i class="ph ph-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-4 mb-8">
+                        <button class="filter-btn px-4 py-2 rounded-full bg-blue-100 text-blue-600 text-sm font-medium hover:bg-blue-200 transition-colors active">All</button>
+                        <button class="filter-btn px-4 py-2 rounded-full bg-blue-100 text-blue-600 text-sm font-medium hover:bg-blue-200 transition-colors" data-filter="Counsellor">Counsellor</button>
+                        <button class="filter-btn px-4 py-2 rounded-full bg-blue-100 text-blue-600 text-sm font-medium hover:bg-blue-200 transition-colors" data-filter="Volunteer">Volunteer</button>
+                        <button class="filter-btn px-4 py-2 rounded-full bg-blue-100 text-blue-600 text-sm font-medium hover:bg-blue-200 transition-colors" data-filter="specialty">Specialty</button>
+                    </div>
+                    <div id="counsellors-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Counsellor cards will be injected here -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Dashboard Tab Content -->
+            <div id="dashboard-tab-content" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">Your Upcoming Sessions</h2>
+                <div id="session-list" class="space-y-6">
+                    <!-- Upcoming sessions will be injected here -->
+                </div>
+                <div id="no-sessions" class="hidden text-center text-gray-600 py-12">
+                    <i class="ph ph-calendar-x text-6xl mb-4 opacity-50"></i>
+                    <p class="text-xl font-medium">You have no upcoming sessions booked.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-8 rounded-xl max-w-2xl w-full mx-4 relative overflow-hidden">
+            <!-- Close Icon -->
+            <button id="close-booking-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="ph ph-x text-2xl"></i>
+            </button>
+            <h3 class="text-2xl font-bold mb-4 text-center text-gradient">Book Your Session</h3>
+            
+            <div id="booking-flow" class="overflow-hidden">
+                <!-- Step 1: Select Date -->
+                <div id="step-1" class="step">
+                    <div class="flex items-center justify-center space-x-4 mb-6">
+                        <img id="counsellor-img" src="" alt="Counsellor" class="w-20 h-20 rounded-full object-cover">
+                        <div class="text-center">
+                            <h4 id="counsellor-name" class="text-xl font-semibold"></h4>
+                            <p id="counsellor-title" class="text-sm text-gray-500"></p>
+                        </div>
+                    </div>
+                    <h4 class="text-lg font-semibold mb-4 text-center">Select a Date</h4>
+                    <div id="date-picker" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-4 mb-6">
+                        <!-- Day cards will be injected here -->
+                    </div>
+                    <button id="next-step-btn" class="w-full px-6 py-3 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400" disabled>Next</button>
+                </div>
+
+                <!-- Step 2: Select Time & Mode -->
+                <div id="step-2" class="step hidden">
+                    <h4 class="text-lg font-semibold mb-4 text-center">Select Time & Mode</h4>
+                    <div id="time-slots" class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                        <!-- Time slots will be injected here -->
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select a Session Mode</label>
+                        <div id="mode-selection" class="flex flex-wrap gap-4 justify-center">
+                            <button class="mode-btn px-6 py-4 rounded-xl shadow-sm border-2 border-transparent bg-gray-100 flex flex-col items-center transition-all duration-300 hover:border-blue-500 hover:shadow-lg" data-mode="video">
+                                <i class="ph ph-video-camera text-2xl text-blue-500 mb-2"></i>
+                                <span class="text-sm font-medium">Video Call</span>
+                            </button>
+                            <button class="mode-btn px-6 py-4 rounded-xl shadow-sm border-2 border-transparent bg-gray-100 flex flex-col items-center transition-all duration-300 hover:border-blue-500 hover:shadow-lg" data-mode="audio">
+                                <i class="ph ph-phone-call text-2xl text-blue-500 mb-2"></i>
+                                <span class="text-sm font-medium">Audio Call</span>
+                            </button>
+                            <button class="mode-btn px-6 py-4 rounded-xl shadow-sm border-2 border-transparent bg-gray-100 flex flex-col items-center transition-all duration-300 hover:border-blue-500 hover:shadow-lg" data-mode="chat">
+                                <i class="ph ph-chat-text text-2xl text-blue-500 mb-2"></i>
+                                <span class="text-sm font-medium">Secure Chat</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="book-session-btn" class="w-full px-6 py-3 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400" disabled>Confirm & Book Session</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Confirmation Modal -->
+    <div id="confirmation-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-8 rounded-xl max-w-md mx-4 text-center relative">
+            <button id="close-confirmation-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="ph ph-x text-2xl"></i>
+            </button>
+            <i class="ph ph-check-circle text-6xl text-blue-500 mb-4 animate-bounce"></i>
+            <h3 class="text-2xl font-bold mb-2">Booking Confirmed!</h3>
+            <p class="text-gray-600 mb-4">Your session is scheduled with <span id="conf-counsellor-name" class="font-semibold"></span> on <span id="conf-date" class="font-semibold"></span> at <span id="conf-time" class="font-semibold"></span>.</p>
+            <div class="flex items-center justify-center space-x-2 text-sm text-gray-500 mb-6">
+                <i class="ph ph-lock text-blue-500"></i>
+                <span>Your session is secure and private.</span>
+            </div>
+            <button id="go-to-dashboard-btn" class="w-full px-6 py-3 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors">Go to My Sessions</button>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chat-modal" class="fixed inset-0 bg-white z-50 flex flex-col hidden">
+        <header class="gradient-bg text-white py-4 px-6 flex items-center justify-between shadow-md">
+            <div class="flex items-center space-x-4">
+                <img id="chat-counsellor-img" src="" alt="Counsellor" class="w-12 h-12 rounded-full object-cover">
+                <div>
+                    <h3 id="chat-counsellor-name" class="text-lg font-semibold"></h3>
+                    <p id="chat-status" class="text-sm font-light opacity-80">Connecting...</p>
+                </div>
+            </div>
+            <button id="end-chat-btn" class="px-4 py-2 rounded-full bg-red-500 text-white font-semibold hover:bg-red-600 transition-colors">End Session</button>
+        </header>
+        <div id="chat-messages" class="flex-1 p-6 overflow-y-auto chat-container">
+            <!-- Chat messages injected -->
+        </div>
+        <footer class="bg-gray-100 p-4 border-t border-gray-200">
+            <div class="flex items-center space-x-4">
+                <input type="text" id="chat-input" placeholder="Type your message..." class="flex-1 px-4 py-3 rounded-full bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button id="send-chat-btn" class="p-3 rounded-full gradient-bg text-white">
+                    <i class="ph ph-paper-plane-right text-lg"></i>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- SOS Modal -->
+    <div id="sos-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-8 rounded-xl max-w-md mx-4 text-center">
+            <i class="ph ph-siren text-6xl text-red-600 mb-4 animate-pulse sos-pulse"></i>
+            <h3 class="text-2xl font-bold mb-2">Urgent Assistance Needed</h3>
+            <p class="text-gray-600 mb-6">It looks like you're in distress. Please contact the Indian national helpline immediately.</p>
+            <div class="space-y-4">
+                <a href="tel:1800-599-0019" class="block px-6 py-3 rounded-full border-2 border-red-600 text-red-600 font-semibold hover:bg-red-50 transition-colors">KIRAN 1800-599-0019</a>
+            </div>
+            <button id="close-sos-modal-btn" class="mt-8 px-6 py-3 rounded-full bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300 transition-colors">Close</button>
+        </div>
+    </div>
+
+    <!-- Post-Session Feedback Modal -->
+    <div id="feedback-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-8 rounded-xl max-w-md mx-4 text-center">
+            <i class="ph ph-smiley-wink text-6xl text-yellow-500 mb-4"></i>
+            <h3 class="text-2xl font-bold mb-2">Session Complete!</h3>
+            <p class="text-gray-600 mb-4">How was this session?</p>
+            <div class="flex justify-center space-x-2 mb-6 text-2xl">
+                <i class="ph ph-star feedback-star transition-all duration-200 cursor-pointer" data-rating="1"></i>
+                <i class="ph ph-star feedback-star transition-all duration-200 cursor-pointer" data-rating="2"></i>
+                <i class="ph ph-star feedback-star transition-all duration-200 cursor-pointer" data-rating="3"></i>
+                <i class="ph ph-star feedback-star transition-all duration-200 cursor-pointer" data-rating="4"></i>
+                <i class="ph ph-star feedback-star transition-all duration-200 cursor-pointer" data-rating="5"></i>
+            </div>
+            <p class="text-sm text-gray-500 mb-4">You earned 50 Wellness Points!</p>
+            <button id="submit-feedback-btn" class="w-full px-6 py-3 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors">Submit Feedback</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const counsellorGrid = document.getElementById('counsellors-grid');
+            const bookingTabBtn = document.getElementById('booking-tab-btn');
+            const dashboardTabBtn = document.getElementById('dashboard-tab-btn');
+            const bookingTabContent = document.getElementById('booking-tab-content');
+            const dashboardTabContent = document.getElementById('dashboard-tab-content');
+            const bookingModal = document.getElementById('booking-modal');
+            const closeBookingModalBtn = document.getElementById('close-booking-modal-btn');
+            const nextStepBtn = document.getElementById('next-step-btn');
+            const bookSessionBtn = document.getElementById('book-session-btn');
+            const confirmationModal = document.getElementById('confirmation-modal');
+            const closeConfirmationModalBtn = document.getElementById('close-confirmation-modal-btn');
+            const goToDashboardBtn = document.getElementById('go-to-dashboard-btn');
+            const datePicker = document.getElementById('date-picker');
+            const timeSlotsContainer = document.getElementById('time-slots');
+            const modeButtons = document.querySelectorAll('.mode-btn');
+            const chatModal = document.getElementById('chat-modal');
+            const endChatBtn = document.getElementById('end-chat-btn');
+            const chatInput = document.getElementById('chat-input');
+            const sendChatBtn = document.getElementById('send-chat-btn');
+            const chatMessages = document.getElementById('chat-messages');
+            const feedbackModal = document.getElementById('feedback-modal');
+            const submitFeedbackBtn = document.getElementById('submit-feedback-btn');
+            const feedbackStars = document.querySelectorAll('.feedback-star');
+            const sosModal = document.getElementById('sos-modal');
+            const closeSosModalBtn = document.getElementById('close-sos-modal-btn');
+            const searchInput = document.getElementById('search-input');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const sessionList = document.getElementById('session-list');
+            const noSessionsMessage = document.getElementById('no-sessions');
+            
+            let selectedCounsellor = null;
+            let selectedDate = null;
+            let selectedTime = null;
+            let selectedMode = null;
+
+            const counsellorsData = [
+                {
+                    id: 1,
+                    name: "Dr. Ananya Sharma",
+                    type: "Counsellor",
+                    title: "Clinical Psychologist",
+                    specialties: ["Anxiety", "Stress", "Depression"],
+                    languages: ["English", "Hindi"],
+                    rating: 5,
+                    img: "https://placehold.co/64x64/E2E8F0/A0AEC0?text=AS"
+                },
+                {
+                    id: 2,
+                    name: "Vikram Singh",
+                    type: "Counsellor",
+                    title: "Licensed Therapist",
+                    specialties: ["Relationships", "Trauma"],
+                    languages: ["English", "Hindi", "Punjabi"],
+                    rating: 4,
+                    img: "https://placehold.co/64x64/E2E8F0/A0AEC0?text=VS"
+                },
+                {
+                    id: 3,
+                    name: "Priya Patel",
+                    type: "Volunteer",
+                    title: "Peer Support Volunteer",
+                    specialties: ["Academic Stress", "Procrastination"],
+                    languages: ["English", "Gujarati"],
+                    rating: 5,
+                    img: "https://placehold.co/64x64/E2E8F0/A0AEC0?text=PP"
+                },
+                {
+                    id: 5,
+                    name: "Sonia Gupta",
+                    type: "Volunteer",
+                    title: "Peer Support Volunteer",
+                    specialties: ["Loneliness", "Self-Esteem"],
+                    languages: ["English"],
+                    rating: 5,
+                    img: "https://placehold.co/64x64/E2E8F0/A0AEC0?text=SG"
+                }
+            ];
+
+            const renderCounsellors = (counsellors) => {
+                counsellorGrid.innerHTML = '';
+                counsellors.forEach(counsellor => {
+                    const card = document.createElement('div');
+                    card.className = `bg-white/20 glassmorphism-card p-6 rounded-xl shadow-md border-2 border-transparent hover:border-blue-300 transition-all duration-300 card-lift cursor-pointer relative`;
+                    card.setAttribute('data-counsellor-id', counsellor.id);
+
+                    const ratingStars = '★'.repeat(counsellor.rating);
+
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <img src="${counsellor.img}" alt="${counsellor.name}" class="w-16 h-16 rounded-full object-cover border-2 border-white">
+                                <div>
+                                    <h3 class="text-xl font-semibold text-white">${counsellor.name}</h3>
+                                    <p class="text-sm text-white/80">${counsellor.title}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="ph ph-star-fill text-xl"></i>
+                                <span class="ml-1 text-white">${counsellor.rating}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-white/80 mb-2">
+                            <i class="ph ph-briefcase text-blue-300"></i>
+                            <span>${counsellor.specialties.join(', ')}</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-white/80">
+                            <i class="ph ph-globe-hemisphere-west text-blue-300"></i>
+                            <span>${counsellor.languages.join(', ')}</span>
+                        </div>
+                        <div class="mt-4 text-sm font-semibold text-white">
+                            Available Today
+                        </div>
+                    `;
+                    counsellorGrid.appendChild(card);
+
+                    card.addEventListener('click', () => {
+                        selectedCounsellor = counsellor;
+                        renderBookingModal();
+                    });
+                });
+            };
+
+            const renderBookingModal = () => {
+                document.getElementById('counsellor-name').textContent = selectedCounsellor.name;
+                document.getElementById('counsellor-title').textContent = selectedCounsellor.title;
+                document.getElementById('counsellor-img').src = selectedCounsellor.img;
+                bookingModal.classList.remove('hidden');
+                
+                // Reset to step 1
+                document.getElementById('step-1').classList.remove('hidden');
+                document.getElementById('step-2').classList.add('hidden');
+                selectedDate = null;
+                selectedTime = null;
+                selectedMode = null;
+                nextStepBtn.disabled = true;
+                bookSessionBtn.disabled = true;
+                modeButtons.forEach(btn => btn.classList.remove('border-blue-500'));
+                renderDatePicker();
+            };
+
+            const renderDatePicker = () => {
+                datePicker.innerHTML = '';
+                const today = new Date();
+                const fourteenDays = [];
+                for (let i = 0; i < 14; i++) {
+                    const date = new Date();
+                    date.setDate(today.getDate() + i);
+                    fourteenDays.push(date);
+                }
+
+                fourteenDays.forEach(date => {
+                    const dayCard = document.createElement('button');
+                    dayCard.className = `day-card px-4 py-3 rounded-xl bg-gray-100 text-gray-800 font-semibold transition-all duration-300 hover:bg-gray-200`;
+                    dayCard.setAttribute('data-date', date.toISOString().split('T')[0]);
+                    dayCard.innerHTML = `
+                        <span class="block text-sm opacity-70">${date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                        <span class="block text-xl">${date.getDate()}</span>
+                    `;
+                    datePicker.appendChild(dayCard);
+
+                    dayCard.addEventListener('click', () => {
+                        document.querySelectorAll('.day-card').forEach(card => card.classList.remove('selected'));
+                        dayCard.classList.add('selected');
+                        selectedDate = dayCard.dataset.date;
+                        nextStepBtn.disabled = false;
+                    });
+                });
+            };
+
+            nextStepBtn.addEventListener('click', () => {
+                document.getElementById('step-1').classList.add('hidden');
+                document.getElementById('step-2').classList.remove('hidden');
+                renderTimeSlots();
+            });
+
+            const renderTimeSlots = () => {
+                timeSlotsContainer.innerHTML = '';
+                const times = ["9:00 AM", "10:30 AM", "1:00 PM", "2:30 PM", "4:00 PM"];
+                times.forEach(time => {
+                    const timeSlot = document.createElement('button');
+                    timeSlot.className = `time-slot px-4 py-3 rounded-full border border-gray-300 text-sm font-semibold transition-all duration-300 hover:bg-gray-200`;
+                    timeSlot.textContent = time;
+                    timeSlotsContainer.appendChild(timeSlot);
+
+                    timeSlot.addEventListener('click', () => {
+                        document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+                        timeSlot.classList.add('selected');
+                        selectedTime = time;
+                        if (selectedMode) {
+                            bookSessionBtn.disabled = false;
+                        }
+                    });
+                });
+            };
+
+            modeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modeButtons.forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedMode = btn.dataset.mode;
+                    if (selectedTime) {
+                        bookSessionBtn.disabled = false;
+                    }
+                });
+            });
+
+            bookSessionBtn.addEventListener('click', () => {
+                if (!selectedCounsellor || !selectedDate || !selectedTime || !selectedMode) return;
+                
+                if (selectedMode === 'chat') {
+                    bookingModal.classList.add('hidden');
+                    startChatSession();
+                } else {
+                    const session = {
+                        counsellor: selectedCounsellor.name,
+                        date: selectedDate,
+                        time: selectedTime,
+                        mode: selectedMode
+                    };
+                    let sessions = JSON.parse(localStorage.getItem('upcomingSessions') || '[]');
+                    sessions.push(session);
+                    localStorage.setItem('upcomingSessions', JSON.stringify(sessions));
+
+                    document.getElementById('conf-counsellor-name').textContent = session.counsellor;
+                    document.getElementById('conf-date').textContent = new Date(session.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+                    document.getElementById('conf-time').textContent = session.time;
+                    
+                    bookingModal.classList.add('hidden');
+                    confirmationModal.classList.remove('hidden');
+                    renderSessions();
+                }
+            });
+
+            // Tab Navigation
+            bookingTabBtn.addEventListener('click', () => {
+                bookingTabBtn.classList.add('active-tab');
+                dashboardTabBtn.classList.remove('active-tab');
+                bookingTabContent.classList.remove('hidden');
+                dashboardTabContent.classList.add('hidden');
+            });
+            dashboardTabBtn.addEventListener('click', () => {
+                dashboardTabBtn.classList.add('active-tab');
+                bookingTabBtn.classList.remove('active-tab');
+                dashboardTabContent.classList.remove('hidden');
+                bookingTabContent.classList.add('hidden');
+                renderSessions();
+            });
+            const activeTab = document.querySelector('.active-tab');
+            activeTab.classList.add('border-blue-600');
+
+            const renderSessions = () => {
+                const sessions = JSON.parse(localStorage.getItem('upcomingSessions') || '[]');
+                sessionList.innerHTML = '';
+                if (sessions.length === 0) {
+                    noSessionsMessage.classList.remove('hidden');
+                } else {
+                    noSessionsMessage.classList.add('hidden');
+                    sessions.forEach(session => {
+                        const sessionCard = document.createElement('div');
+                        sessionCard.className = 'bg-white p-6 rounded-xl shadow-md border-2 border-gray-200';
+                        const icon = session.mode === 'video' ? 'ph-video-camera' : session.mode === 'audio' ? 'ph-phone-call' : 'ph-chat-text';
+                        const modeText = session.mode.charAt(0).toUpperCase() + session.mode.slice(1);
+                        sessionCard.innerHTML = `
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-xl font-semibold text-gray-800">Session with ${session.counsellor}</h3>
+                                <div class="text-gray-600 text-sm flex items-center space-x-2">
+                                    <i class="ph ${icon} text-lg"></i>
+                                    <span>${modeText}</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-500 text-sm">On ${new Date(session.date).toLocaleDateString()} at ${session.time}</p>
+                        `;
+                        sessionList.appendChild(sessionCard);
+                    });
+                }
+            };
+            
+            closeBookingModalBtn.addEventListener('click', () => {
+                bookingModal.classList.add('hidden');
+            });
+
+            closeConfirmationModalBtn.addEventListener('click', () => {
+                confirmationModal.classList.add('hidden');
+            });
+
+            goToDashboardBtn.addEventListener('click', () => {
+                confirmationModal.classList.add('hidden');
+                dashboardTabBtn.click();
+            });
+
+            // Chat Modal Logic
+            const startChatSession = () => {
+                chatModal.classList.remove('hidden');
+                document.getElementById('chat-counsellor-name').textContent = selectedCounsellor.name;
+                document.getElementById('chat-counsellor-img').src = selectedCounsellor.img;
+                
+                // Simulate counsellor joining
+                setTimeout(() => {
+                    document.getElementById('chat-status').textContent = 'Online';
+                    addChatMessage('counsellor', `Hello, how can I help you today?`);
+                }, 2000);
+            };
+
+            endChatBtn.addEventListener('click', () => {
+                chatModal.classList.add('hidden');
+                showFeedbackModal();
+            });
+
+            sendChatBtn.addEventListener('click', () => {
+                const message = chatInput.value.trim();
+                if (message) {
+                    addChatMessage('user', message);
+                    chatInput.value = '';
+                    // Simulate bot response and distress detection
+                    setTimeout(() => {
+                        const lowerMsg = message.toLowerCase();
+                        if (lowerMsg.includes('distress') || lowerMsg.includes('anxious') || lowerMsg.includes('hopeless')) {
+                             showSOSModal();
+                             addChatMessage('counsellor', "It sounds like you're going through a tough time. I'm here to listen, but please know there's immediate help available if you need it.");
+                        } else {
+                             addChatMessage('counsellor', "Thank you for sharing. What else is on your mind?");
+                        }
+                    }, 1000);
+                }
+            });
+
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendChatBtn.click();
+                }
+            });
+
+            const addChatMessage = (sender, message) => {
+                const messageDiv = document.createElement('div');
+                const isUser = sender === 'user';
+                messageDiv.className = `flex mb-4 ${isUser ? 'justify-end' : 'justify-start'}`;
+                
+                const messageBubble = document.createElement('div');
+                messageBubble.className = `max-w-[70%] p-4 rounded-xl ${isUser ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-200 text-gray-800 rounded-bl-none'}`;
+                messageBubble.textContent = message;
+                
+                messageDiv.appendChild(messageBubble);
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to bottom
+            };
+
+            // Feedback Modal Logic
+            const showFeedbackModal = () => {
+                feedbackModal.classList.remove('hidden');
+            };
+
+            feedbackStars.forEach(star => {
+                star.addEventListener('click', () => {
+                    feedbackStars.forEach(s => s.classList.remove('text-yellow-500'));
+                    const rating = star.dataset.rating;
+                    for (let i = 0; i < rating; i++) {
+                        feedbackStars[i].classList.add('text-yellow-500');
+                    }
+                });
+            });
+
+            submitFeedbackBtn.addEventListener('click', () => {
+                feedbackModal.classList.add('hidden');
+            });
+            
+
+            // SOS Modal Logic
+            const showSOSModal = () => {
+                sosModal.classList.remove('hidden');
+            };
+
+            closeSosModalBtn.addEventListener('click', () => {
+                sosModal.classList.add('hidden');
+            });
+
+            // Search and Filter Logic
+            const filterAndSearch = () => {
+                const query = searchInput.value.toLowerCase();
+                const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+                
+                const filteredCounsellors = counsellorsData.filter(counsellor => {
+                    const matchesSearch = counsellor.name.toLowerCase().includes(query) || 
+                                          counsellor.specialties.join(', ').toLowerCase().includes(query) ||
+                                          counsellor.languages.join(', ').toLowerCase().includes(query);
+                    
+                    const matchesFilter = activeFilter === 'all' || 
+                                          counsellor.type.toLowerCase() === activeFilter.toLowerCase() ||
+                                          (activeFilter === 'specialty' && counsellor.specialties.join(', ').toLowerCase().includes(query));
+
+                    return matchesSearch && matchesFilter;
+                });
+                renderCounsellors(filteredCounsellors);
+            };
+
+            searchInput.addEventListener('input', filterAndSearch);
+
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    filterAndSearch();
+                });
+            });
+
+            // Initial render
+            renderCounsellors(counsellorsData);
+        });
+    </script>
+</body>
+</html>
