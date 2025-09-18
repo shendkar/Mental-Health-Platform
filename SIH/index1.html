@@ -742,20 +742,20 @@
 
             function getSpecificHelpResponse(message) {
                 const lowerCaseMsg = message.toLowerCase();
-                if (lowerCaseMsg.includes('emergency') || lowerCaseMsg.includes('dying') || lowerCaseMsg.includes('suicidal') || lowerCaseMsg.includes('kill myself') || lowerCaseMsg.includes('killing myself') || lowerCaseMsg.includes('end my life') || lowerCaseMsg.includes('want to die') || lowerCaseMsg.includes('hopeless')) {
+                if (lowerCaseMsg.includes('emergency') || lowerCaseMsg.includes('dying') || lowerCaseMsg.includes('suicidal') || lowerCaseMsg.includes('kill myself') || lowerCaseMsg.includes('killing myself') || lowerCaseMsg.includes('end my life') || lowerCaseMsg.includes('want to die') || lowerCaseMsg.includes('hopeless')||lowerCaseMsg.includes('I dont want to live')) {
                     return `I hear you, and I want you to know you are not alone. Please reach out for help immediately. Here are trusted mental health helplines in India:<br><br>1. <a href="tel:18005990019" class="text-blue-400 underline">KIRAN (24/7 National Helpline): 1800-599-0019</a> <br>2. <a href="tel:+912227546669" class="text-blue-400 underline">AASRA (Suicide Prevention): +91-22-27546669 / 27546667</a> <br>3. <a href="tel:18602662345" class="text-blue-400 underline">Vandrevala Foundation Helpline: 1860-2662-345 / 9999-666-555</a> <br><br>If you are in immediate danger, please call these numbers right now. You can also book a confidential session with a counsellor immediately through our website’s Anonymous Counselling section. A professional can support you right away.`;
                 }
                 if (lowerCaseMsg.includes('book') || lowerCaseMsg.includes('reading')) {
                     return "Reading can be a great way to relax. You might like 'The Midnight Library' by Matt Haig or 'Reasons to Stay Alive' by Matt Haig. They are often comforting.";
                 }
-                if (lowerCaseMsg.includes('audio') || lowerCaseMsg.includes('meditation') || lowerCaseMsg.includes('podcast')) {
-                    return "Listening to calming audios can really help. Try guided meditations or stress-relief podcasts on YouTube or Spotify.";
+                if (lowerCaseMsg.includes('audio') || lowerCaseMsg.includes('meditation') || lowerCaseMsg.includes('podcast') || lowerCaseMsg.includes('video') || lowerCaseMsg.includes('videos') || lowerCaseMsg.includes('listen')) {
+                    return "Here are a few calming options you might try:<br>Audio:<br>1. Guided body scan (10 min)<br>2. Box breathing or 4-7-8 track<br>3. Soft rain or ocean sounds playlist<br>Video:<br>1. 10-minute breathing exercise<br>2. Gentle grounding practice (5-4-3-2-1)<br>3. Study-with-me (Pomodoro) session for focus<br><br>You can also explore our <a href=\"PsychoeducationalHub.html\" class=\"text-blue-400 underline\">Psychoeducational Hub</a> for relaxation material and resources.";
                 }
                 if (lowerCaseMsg.includes('breathing') || lowerCaseMsg.includes('exercise') || lowerCaseMsg.includes('breathe')) {
-                    return "Try the 4-7-8 breathing technique: Inhale for 4 seconds, hold for 7 seconds, and exhale for 8 seconds. It's scientifically proven to calm stress.";
+                    return "You could try the 4-7-8 breathing: inhale 4s, hold 7s, exhale 8s. Many students find it helps them feel calmer.";
                 }
                 if (lowerCaseMsg.includes('coping mechanism') || lowerCaseMsg.includes('stress')) {
-                    return "Healthy coping can be journaling, walking, listening to music, or talking with friends. Which one works best for you?";
+                    return "That sounds heavy. Here are a few simple ways to cope right now:<br>1. 4-7-8 breathing: inhale 4s, hold 7s, exhale 8s<br>2. 5-4-3-2-1 grounding: name 5 things you see, 4 touch, 3 hear, 2 smell, 1 taste<br>3. Quick journal: write 3 worries, then 3 small next steps<br>4. Pomodoro: 25 min study, 5 min break (repeat 3x), then a longer break<br>5. Reach out: text or call someone you trust";
                 }
                 if (lowerCaseMsg.includes('psychologist') || lowerCaseMsg.includes('counselor') || lowerCaseMsg.includes('therapist') || lowerCaseMsg.includes('professional help') || lowerCaseMsg.includes('helpline')) {
                     return "It takes courage to reach out. You can directly call KIRAN 1800-599-0019, or use our website's Anonymous Counselling booking feature to talk to a professional privately.";
@@ -788,7 +788,58 @@
                     try {
                         const payload = {
                             contents: [{ parts: [{ text: userMessage }] }],
-                            systemInstruction: { parts: [{ text: `You are a supportive and empathetic digital companion named MindCare. Your goal is to provide a safe, non-judgmental space for students to talk about their feelings. Use a warm, gentle, and conversational tone. Acknowledge the user's emotions and respond with care. Keep your responses short, simple, and direct. Do not give medical advice, diagnoses, or treatment plans. Refer the user to professional resources when appropriate.` }] },
+                            systemInstruction: { parts: [{ text: `
+You are MindCare, a compassionate and supportive digital mental health companion for higher education students.
+
+Tone & Style:
+- Warm, empathetic, non-judgmental.
+- Short, clear, conversational replies (typically 2–5 sentences).
+- Always acknowledge and validate the student’s feelings first, then gently suggest help.
+- Use simple, student-friendly language.
+
+Core Capabilities:
+1) Emotional Support
+   - Actively listen and validate feelings.
+   - Encourage healthy expression (writing, journaling, talking to someone trusted).
+2) Common Mental Health Concerns
+   - Stress & burnout (study load, exams, future anxiety).
+   - Depression (low mood, hopelessness, loss of interest).
+   - Anxiety (worry, fear, overthinking, panic sensations).
+   - Loneliness & homesickness.
+   - Sleep issues & lifestyle imbalance.
+   - Relationship/friendship stress.
+   - Self-esteem and body image struggles.
+3) Coping Strategies to Recommend (as appropriate)
+   - Breathing techniques (4-7-8 method).
+   - Grounding exercises (5-4-3-2-1 method).
+   - Journaling prompts (e.g., "Write 3 things you’re grateful for today").
+   - Study-life balance tips (Pomodoro, small steps, scheduling, breaks).
+   - Relaxation (guided meditation, soothing music).
+   - Reaching out to friends/family/peers.
+4) Resource Guidance
+   - Suggest psychoeducational hub resources (articles, videos, audios) when relevant.
+   - Encourage use of Mood & Stress Tracker (self-assessments) as appropriate.
+   - Promote Anonymous Counselling booking for professional support.
+
+Crisis & Emergency Handling (India Only)
+If a student expresses suicidal thoughts, intent to harm self/others, or extreme hopelessness:
+- Respond immediately with empathy and validation.
+- Provide Indian helpline numbers clearly and encourage immediate contact:
+  - KIRAN (24/7 National Helpline): 1800-599-0019
+  - AASRA: +91-22-27546669 / 27546667
+  - Vandrevala Foundation Helpline: 1860-2662-345 / 9999-666-555
+- Encourage contacting someone they trust nearby and booking urgent counselling.
+
+Boundaries
+- Do NOT give medical advice, diagnoses, or prescribe treatment.
+- Avoid definitive clinical claims; provide supportive guidance only.
+- Always redirect serious issues to professionals or helplines.
+
+Interaction Examples
+- Exam anxiety: Acknowledge + suggest brief breathing; optionally mention Hub video on exam stress.
+- "I want to die": Empathy + helplines (India) + encourage reaching counsellor urgently.
+- Loneliness: Validate + suggest small connection steps + peer support resources.
+` }] },
                         };
 
                         const response = await fetch(apiUrl, {
