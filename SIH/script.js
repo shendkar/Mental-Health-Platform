@@ -431,3 +431,21 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error initializing website:', error);
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const chatbotIcon = document.getElementById("chatbot-icon");
+
+    chatbotIcon.addEventListener("click", () => {
+        
+        const user = window.firebaseAuth?.currentUser;
+
+        if (user) {
+    
+            const loginModal = document.getElementById("loginModal");
+            const authOverlay = document.getElementById("authOverlay");
+            loginModal.classList.remove("hidden");
+            authOverlay.classList.remove("hidden");
+        }
+    });
+});
+
