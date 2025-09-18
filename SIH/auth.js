@@ -114,9 +114,6 @@ signupForm?.addEventListener('submit', async (e) => {
   }
 });
 
-// Google auth removed per request
 
-// Logout
-// Logout control intentionally not shown on index.html per request
 
 
