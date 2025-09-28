@@ -884,10 +884,11 @@ Interaction Examples
                 chatbotIcon.style.display = 'none';
             });
 
-            const closeChat = () => {
+           const closeChat = () => {
                 chatbotPanel.classList.remove('open');
                 overlay.classList.remove('active');
-            }
+                chatbotIcon.style.display = 'flex'; 
+            };
 
             closeButton.addEventListener('click', closeChat);
             overlay.addEventListener('click', closeChat);
